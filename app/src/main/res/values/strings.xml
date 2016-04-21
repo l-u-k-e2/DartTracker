@@ -5,4 +5,6 @@
     <string name="heading">Spielerauswahl</string>
     <string name="text_button_back">zurück</string>
     <string name="text_button_ok">OK</string>
+    <string name="heading_player_text">Spieler</string>
+    <string name="heading_points_text">Punkte</string>
 </resources>
