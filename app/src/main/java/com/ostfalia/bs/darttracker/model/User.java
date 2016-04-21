@@ -10,6 +10,8 @@ public class User {
     private String nachname;
     private String alias;
 
+    public User(){}
+
     public User(long id, String vorname, String nachname, String alias) {
         this.vorname = vorname;
         this.nachname = nachname;

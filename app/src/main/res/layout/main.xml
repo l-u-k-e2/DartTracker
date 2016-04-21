@@ -23,7 +23,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp">
 
         <Button
@@ -53,6 +53,33 @@
             android:text="New Button"
             android:id="@+id/button4"
             android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/userName_input_text"
+            android:layout_weight="0.26" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_name_input"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="61dp"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/save_button" />
     </LinearLayout>
 
 </LinearLayout>

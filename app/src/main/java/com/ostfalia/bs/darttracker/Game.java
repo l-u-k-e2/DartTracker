@@ -39,10 +39,10 @@ public class Game extends FragmentActivity implements UserChoiceFragment.OnGameS
     }
 
     @Override
-    public void onGameStarted(ArrayList<Integer> uebergabe) {
+    public void onGameStarted(long[] ids) {
         ScoringFragment scoringFragment = new ScoringFragment();
         Bundle args = new Bundle();
-        args.putIntegerArrayList("user",uebergabe);
+        args.putLongArray("user",ids);
         scoringFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -53,4 +53,6 @@ public class Game extends FragmentActivity implements UserChoiceFragment.OnGameS
 
         Log.d("onGameStarted","Starte das SPiel!!!");
     }
+
+
 }
