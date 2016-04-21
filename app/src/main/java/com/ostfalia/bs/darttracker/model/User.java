@@ -5,14 +5,16 @@ package com.ostfalia.bs.darttracker.model;
  */
 public class User {
 
+    private long id;
     private String vorname;
     private String nachname;
     private String alias;
 
-    public User(String vorname, String nachname, String alias) {
+    public User(long id, String vorname, String nachname, String alias) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.alias = alias;
+        this.id = id;
     }
 
     public String getVorname() {
@@ -37,5 +39,13 @@ public class User {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
