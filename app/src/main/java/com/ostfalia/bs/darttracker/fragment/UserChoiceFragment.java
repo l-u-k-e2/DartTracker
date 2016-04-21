@@ -1,35 +1,42 @@
-package com.ostfalia.bs.darttracker;
+package com.ostfalia.bs.darttracker.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.ostfalia.bs.darttracker.R;
 import com.ostfalia.bs.darttracker.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Lukas on 15.04.2016.
+ * Created by lukas on 21.04.2016.
  */
-public class NewGame extends Activity {
-
+public class UserChoiceFragment extends Fragment{
 
     private List<User> user = new ArrayList<>();
     private ViewGroup userFrame;
     private float massstab;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_game);
-        userFrame = (ViewGroup)findViewById(R.id.user_frame);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.user_choice, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        userFrame = (ViewGroup)getActivity().findViewById(R.id.user_frame);
         massstab = getResources().getDisplayMetrics().density;
 
         user.add(new User("Lukas", "Müller", "Luke"));
@@ -46,18 +53,15 @@ public class NewGame extends Activity {
             params.topMargin = (int)Math.round(40*massstab) * (i+1);
             params.gravity = Gravity.TOP + Gravity.LEFT;
             //Textview
-            TextView userText = new TextView(this);
+            TextView userText = new TextView(getActivity());
             userText.setText(user.get(i).getVorname());
             userText.setGravity(Gravity.RIGHT);
             userText.setTextSize(20);
             userFrame.addView(userText,params);
             //Checkbox
-            CheckBox userCheck = new CheckBox(this);
+            CheckBox userCheck = new CheckBox(getActivity());
             userCheck.setGravity(Gravity.LEFT);
             userFrame.addView(userCheck,params);
         }
-
-
     }
-
 }
