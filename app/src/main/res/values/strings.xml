@@ -2,4 +2,7 @@
     <string name="app_name">DartTracker</string>
     <string name="action_settings">Settings</string>
     <string name="neuesSpiel_text">Neues Spiel</string>
+    <string name="heading">Spielerauswahl</string>
+    <string name="text_button_back">zurück</string>
+    <string name="text_button_ok">OK</string>
 </resources>
