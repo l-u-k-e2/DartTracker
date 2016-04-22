@@ -4,14 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,7 +26,6 @@ import java.util.List;
 public class UserChoiceFragment extends Fragment implements View.OnClickListener{
 
     private List<User> user = new ArrayList<>();
-    private long[] ids;
     private OnGameStartedListener onGameStartedListener;
     private UserDbHelper userDbHelper;
     private TableLayout tableLayout;
@@ -75,7 +71,7 @@ public class UserChoiceFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        ids = new long[user.size()];
+        long[] ids = new long[user.size()];
         for (int i=1; i < tableLayout.getChildCount(); i++){
             TableRow row = (TableRow) tableLayout.getChildAt(i);
             CheckBox checkBox = (CheckBox)row.getChildAt(1);
@@ -89,6 +85,6 @@ public class UserChoiceFragment extends Fragment implements View.OnClickListener
     }
 
     public interface OnGameStartedListener {
-        public void onGameStarted(long[] ids);
+        void onGameStarted(long[] ids);
     }
 }
