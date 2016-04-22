@@ -74,9 +74,12 @@ public class ScoringFragment extends Fragment implements View.OnClickListener {
                 //Row der Table hinzufügen
                 table.addView(tableRow);
             }
-            startGame();
         }
-
+        if (!users.isEmpty()){
+            startGame();
+        }else{
+            //TODO: Es wurden keine Spieler ausgewählt
+        }
         super.onActivityCreated(savedInstanceState);
     }
 
