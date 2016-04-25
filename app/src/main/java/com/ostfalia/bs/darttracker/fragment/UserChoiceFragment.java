@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,17 +72,31 @@ public class UserChoiceFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+        boolean minOneUserChecked = false;
         long[] ids = new long[user.size()];
         for (int i=1; i < tableLayout.getChildCount(); i++){
             TableRow row = (TableRow) tableLayout.getChildAt(i);
             CheckBox checkBox = (CheckBox)row.getChildAt(1);
             if (checkBox.isChecked()){
+                minOneUserChecked = true;
                 TextView userText = (TextView)row.getChildAt(0);
                 User user = (User)userText.getTag();
                 ids[i-1] = user.getId();
             }
         }
-        onGameStartedListener.onGameStarted(ids);
+        if (minOneUserChecked){
+            onGameStartedListener.onGameStarted(ids);
+        }else{
+            showDialogChooseUser();
+        }
+    }
+
+    private void showDialogChooseUser(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Mindestens Einen Spieler auswählen!");
+        builder.setTitle("Spielerwahl");
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public interface OnGameStartedListener {
