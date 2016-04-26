@@ -12,4 +12,6 @@
     <string name="text_wert">Wert</string>
     <string name="text_zwanzig">Trefferquote 20</string>
     <string name="text_statistic">Statistik</string>
+    <string name="text_vierzig">Trefferquote 40</string>
+    <string name="text_sechzig">Trefferquote 60</string>
 </resources>

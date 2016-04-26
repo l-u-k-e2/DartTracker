@@ -100,13 +100,15 @@ public class ScoringFragment extends Fragment implements View.OnClickListener {
     private void reduceScore(List<Integer> scoreList){
         Integer scoreShot = scoreList.get(0) + scoreList.get(1) + scoreList.get(2);
         TextView score = (TextView)getCurrentUserRow().getChildAt(1);
-        Integer current = Integer.valueOf(score.getText().toString());
-        if ((current - scoreShot)>0){
-            score.setText(String.valueOf(current - scoreShot));
+        Integer currentScore = Integer.valueOf(score.getText().toString());
+        if ((currentScore - scoreShot)>0){
+            score.setText(String.valueOf(currentScore - scoreShot));
             //save Aufnahme in DB
-            userDbHelper.saveScore(scoreList,users.get(posOfAktuellerSpieler).getId());
-        }else if((current - scoreShot) == 0){
-            score.setText(String.valueOf(current - scoreShot));
+            if (currentScore > 100){
+                userDbHelper.saveScore(scoreList,users.get(posOfAktuellerSpieler).getId());
+            }
+        }else if((currentScore - scoreShot) == 0){
+            score.setText(String.valueOf(currentScore - scoreShot));
             //save Aufnahme in DB
             userDbHelper.saveScore(scoreList,users.get(posOfAktuellerSpieler).getId());
             showWinner();

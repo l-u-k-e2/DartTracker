@@ -24,7 +24,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.2"
+        android:layout_weight="1.5"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
 
@@ -99,11 +99,11 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="0.8">
 
                         <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:inputType="number"
                             android:ems="10"
                             android:id="@+id/score1_edit_text" />
@@ -145,7 +145,7 @@
 
                         <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:inputType="number"
                             android:ems="10"
                             android:id="@+id/score2_edit_text" />
@@ -185,7 +185,7 @@
 
                         <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:inputType="number"
                             android:ems="10"
                             android:id="@+id/score3_edit_text" />
@@ -195,20 +195,15 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3.3"
-        android:layout_marginRight="30dp">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OK"
-            android:id="@+id/scoring_ok_button"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:id="@+id/scoring_ok_button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center|right"
+        android:layout_marginRight="20dp" />
 
 </LinearLayout>
