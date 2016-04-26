@@ -10,15 +10,18 @@ import android.util.Log;
 
 import com.ostfalia.bs.darttracker.model.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lukas on 21.04.2016.
  */
 public class UserDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 12;
     public static final String DATABASE_NAME = "DartTracker.db";
 
     //Definieren der Tabelle
@@ -27,20 +30,39 @@ public class UserDbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_VORNAME = "vorname";
         public static final String COLUMN_NAME_NACHNAME = "nachname";
         public static final String COLUMN_NAME_ALIAS = "alias";
+    }
 
+    public static abstract class TableStatistic implements BaseColumns {
+        public static final String TABLE_NAME = "statistic";
+        public static final String COLUMN_NAME_TIME = "time";
+        public static final String COLUMN_NAME_POINTS = "points";
+        public static final String COLUMN_NAME_PLAYER = "playerid";
     }
 
     //Definition von typischen Statements
     private static final String TEXT_TYPE = " TEXT";
+    private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
+    private static final String SEMMICOLON = ";";
+    private static final String SQL_CREATE_USER =
             "CREATE TABLE " + TableUser.TABLE_NAME + " (" +
                     TableUser._ID + " INTEGER PRIMARY KEY," +
                     TableUser.COLUMN_NAME_VORNAME + TEXT_TYPE + COMMA_SEP +
                     TableUser.COLUMN_NAME_NACHNAME + TEXT_TYPE + COMMA_SEP +
                     TableUser.COLUMN_NAME_ALIAS + TEXT_TYPE +
                     " )";
-    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TableUser.TABLE_NAME;
+    private static final String SQL_CREATE_STATISTIC =
+            "CREATE TABLE " + TableStatistic.TABLE_NAME + " (" +
+                    TableStatistic._ID + " INTEGER PRIMARY KEY," +
+                    TableStatistic.COLUMN_NAME_TIME + " DEFAULT CURRENT_TIMESTAMP " + COMMA_SEP +
+                    TableStatistic.COLUMN_NAME_POINTS + INTEGER_TYPE + COMMA_SEP +
+                    TableStatistic.COLUMN_NAME_PLAYER + INTEGER_TYPE + COMMA_SEP +
+                    "FOREIGN KEY(" + TableStatistic.COLUMN_NAME_PLAYER + ") REFERENCES " +
+                    TableUser.TABLE_NAME + "(" +TableUser._ID + ")" +
+                    " )";
+    private static final String SQL_DELETE_USER = "DROP TABLE IF EXISTS " + TableUser.TABLE_NAME + SEMMICOLON;
+    private static final String SQL_DELETE_STATISTIC = "DROP TABLE IF EXISTS " + TableStatistic.TABLE_NAME + SEMMICOLON;
+
 
     public UserDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,12 +70,14 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_USER);
+        db.execSQL(SQL_CREATE_STATISTIC);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_DELETE_STATISTIC);
+        db.execSQL(SQL_DELETE_USER);
         onCreate(db);
     }
 
@@ -61,6 +85,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
+    //---------------------------------- USER Transactions ----------------------------------------
 
     public long createUser(String vorname){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -106,6 +132,27 @@ public class UserDbHelper extends SQLiteOpenHelper {
             }while (c.moveToNext());
         }
         return user;
+    }
+
+    //------------------------------------- Statistic Transactions -------------------------------------------
+
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public long saveScore(List<Integer> scoreList, long userId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < scoreList.size(); i++) {
+            values.put(TableStatistic.COLUMN_NAME_TIME,getDateTime());
+            values.put(TableStatistic.COLUMN_NAME_POINTS, scoreList.get(i));
+            values.put(TableStatistic.COLUMN_NAME_PLAYER, userId);
+        }
+        long newRowId = db.insert(TableStatistic.TABLE_NAME, null, values);
+        return newRowId;
     }
 
 

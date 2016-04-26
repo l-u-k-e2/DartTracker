@@ -86,21 +86,29 @@ public class ScoringFragment extends Fragment implements View.OnClickListener {
         return true;
     }
 
-    private int countScore(){
-        Integer scoreShot = 0;
+    private List<Integer> countScore(){
+        List<Integer> scoreList = new ArrayList<>();
         Integer score1 = Integer.valueOf((score1Text).getText().toString());
         Integer score2 = Integer.valueOf((score2Text).getText().toString());
         Integer score3 = Integer.valueOf((score3Text).getText().toString());
-        return score1 + score2 + score3;
+        scoreList.add(score1);
+        scoreList.add(score2);
+        scoreList.add(score3);
+        return scoreList;
     }
 
-    private void reduceScore(int scoreShot){
+    private void reduceScore(List<Integer> scoreList){
+        Integer scoreShot = scoreList.get(0) + scoreList.get(1) + scoreList.get(2);
         TextView score = (TextView)getCurrentUserRow().getChildAt(1);
         Integer current = Integer.valueOf(score.getText().toString());
         if ((current - scoreShot)>0){
             score.setText(String.valueOf(current - scoreShot));
+            //save Aufnahme in DB
+            userDbHelper.saveScore(scoreList,users.get(posOfAktuellerSpieler).getId());
         }else if((current - scoreShot) == 0){
             score.setText(String.valueOf(current - scoreShot));
+            //save Aufnahme in DB
+            userDbHelper.saveScore(scoreList,users.get(posOfAktuellerSpieler).getId());
             showWinner();
         }
     }
