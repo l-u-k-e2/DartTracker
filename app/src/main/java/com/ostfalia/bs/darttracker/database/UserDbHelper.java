@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.ostfalia.bs.darttracker.model.Shot;
 import com.ostfalia.bs.darttracker.model.User;
 
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import java.util.Locale;
  */
 public class UserDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "DartTracker.db";
 
     //Definieren der Tabelle
@@ -32,8 +33,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_ALIAS = "alias";
     }
 
-    public static abstract class TableStatistic implements BaseColumns {
-        public static final String TABLE_NAME = "statistic";
+    public static abstract class TableShot implements BaseColumns {
+        public static final String TABLE_NAME = "shot";
         public static final String COLUMN_NAME_TIME = "time";
         public static final String COLUMN_NAME_POINTS = "points";
         public static final String COLUMN_NAME_PLAYER = "playerid";
@@ -51,17 +52,19 @@ public class UserDbHelper extends SQLiteOpenHelper {
                     TableUser.COLUMN_NAME_NACHNAME + TEXT_TYPE + COMMA_SEP +
                     TableUser.COLUMN_NAME_ALIAS + TEXT_TYPE +
                     " )";
+
+    //SQL Queries
     private static final String SQL_CREATE_STATISTIC =
-            "CREATE TABLE " + TableStatistic.TABLE_NAME + " (" +
-                    TableStatistic._ID + " INTEGER PRIMARY KEY," +
-                    TableStatistic.COLUMN_NAME_TIME + " DEFAULT CURRENT_TIMESTAMP " + COMMA_SEP +
-                    TableStatistic.COLUMN_NAME_POINTS + INTEGER_TYPE + COMMA_SEP +
-                    TableStatistic.COLUMN_NAME_PLAYER + INTEGER_TYPE + COMMA_SEP +
-                    "FOREIGN KEY(" + TableStatistic.COLUMN_NAME_PLAYER + ") REFERENCES " +
+            "CREATE TABLE " + TableShot.TABLE_NAME + " (" +
+                    TableShot._ID + " INTEGER PRIMARY KEY," +
+                    TableShot.COLUMN_NAME_TIME + " DEFAULT CURRENT_TIMESTAMP " + COMMA_SEP +
+                    TableShot.COLUMN_NAME_POINTS + INTEGER_TYPE + COMMA_SEP +
+                    TableShot.COLUMN_NAME_PLAYER + INTEGER_TYPE + COMMA_SEP +
+                    "FOREIGN KEY(" + TableShot.COLUMN_NAME_PLAYER + ") REFERENCES " +
                     TableUser.TABLE_NAME + "(" +TableUser._ID + ")" +
                     " )";
     private static final String SQL_DELETE_USER = "DROP TABLE IF EXISTS " + TableUser.TABLE_NAME + SEMMICOLON;
-    private static final String SQL_DELETE_STATISTIC = "DROP TABLE IF EXISTS " + TableStatistic.TABLE_NAME + SEMMICOLON;
+    private static final String SQL_DELETE_STATISTIC = "DROP TABLE IF EXISTS " + TableShot.TABLE_NAME + SEMMICOLON;
 
 
     public UserDbHelper(Context context) {
@@ -134,7 +137,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
-    //------------------------------------- Statistic Transactions -------------------------------------------
+    //------------------------------------- Shot Transactions -------------------------------------------
 
     private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -143,16 +146,33 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return dateFormat.format(date);
     }
 
-    public long saveScore(List<Integer> scoreList, long userId){
+    public void saveScore(List<Integer> scoreList, long userId){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         for (int i = 0; i < scoreList.size(); i++) {
-            values.put(TableStatistic.COLUMN_NAME_TIME,getDateTime());
-            values.put(TableStatistic.COLUMN_NAME_POINTS, scoreList.get(i));
-            values.put(TableStatistic.COLUMN_NAME_PLAYER, userId);
+            values.put(TableShot.COLUMN_NAME_TIME,getDateTime());
+            values.put(TableShot.COLUMN_NAME_POINTS, scoreList.get(i));
+            values.put(TableShot.COLUMN_NAME_PLAYER, userId);
+            long newRowId = db.insert(TableShot.TABLE_NAME, null, values);
         }
-        long newRowId = db.insert(TableStatistic.TABLE_NAME, null, values);
-        return newRowId;
+    }
+
+    public List<Shot> getShots(User user){
+        List<Shot> shots = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TableShot.TABLE_NAME + " WHERE " + TableShot.COLUMN_NAME_PLAYER + " = " + user.getId();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if(c.moveToFirst()){
+            do {
+                Shot shot = new Shot();
+                shot.setId(c.getInt(c.getColumnIndex(TableShot._ID)));
+                shot.setDate(c.getString(c.getColumnIndex(TableShot.COLUMN_NAME_TIME)));
+                shot.setPunkte(c.getInt(c.getColumnIndex(TableShot.COLUMN_NAME_POINTS)));
+                shot.setPlayerId(c.getInt(c.getColumnIndex(TableShot.COLUMN_NAME_PLAYER)));
+                shots.add(shot);
+            }while (c.moveToNext());
+        }
+        return shots;
     }
 
 

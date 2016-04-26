@@ -22,6 +22,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.main);
         Button button = (Button)findViewById(R.id.button_new_game);
         button.setOnClickListener(this);
+        Button buttonStatistic = (Button)findViewById(R.id.button_statistic);
+        buttonStatistic.setOnClickListener(this);
         userDbHelper = new UserDbHelper(getApplicationContext());
         Button saveButton = (Button)findViewById(R.id.save_button);
         saveButton.setOnClickListener(this);
@@ -32,9 +34,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.save_button){
             saveName();
-        }else{
+        }else if (v.getId() == R.id.button_new_game){
             startActivity(new Intent(this, Game.class));
-            Log.d("Absprung","Spring zur Spielerauswahl");
+        }else if (v.getId() == R.id.button_statistic){
+            startActivity(new Intent(this, StatisticActivity.class));
         }
     }
 
