@@ -26,6 +26,7 @@ public class StatisticActivity extends Activity {
     private TextView heading;
     private List<User> users;
     private UserDbHelper userDbHelper;
+    private int userZeiger = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,23 +49,27 @@ public class StatisticActivity extends Activity {
         heading = (TextView)findViewById(R.id.heading_statistic_activity);
         userDbHelper = new UserDbHelper(getApplicationContext());
         users = userDbHelper.getAllUser();
-        fillStatistic();
+        fillStatistic(users.get(0));
     }
 
     private void lastUser() {
-        //lasUser
-        Log.e("Swipe","lastUser");
+        if (userZeiger>0){
+            userZeiger--;
+            fillStatistic(users.get(userZeiger));
+        }
     }
 
     private void nextUser() {
-        //nextUser
-        Log.e("Swipe","nextUser");
+        if (userZeiger<users.size()-1){
+            userZeiger++;
+            fillStatistic(users.get(userZeiger));
+        }
     }
 
-    private void fillStatistic(){
-        heading.setText(heading.getText() + " " +  users.get(0).getVorname());
-        List<Shot> shots = userDbHelper.getShots(users.get(0));
-        Double countOfAllShots = Double.valueOf(userDbHelper.getShots(users.get(0)).size());
+    private void fillStatistic(User user){
+        heading.setText("Statistik " +  user.getVorname());
+        List<Shot> shots = userDbHelper.getShots(user);
+        Double countOfAllShots = Double.valueOf(userDbHelper.getShots(user).size());
         Double countOfTwenties = 0d;
         Double countOfForties = 0d;
         Double countOFSixties = 0d;
